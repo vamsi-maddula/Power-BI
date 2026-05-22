@@ -1,0 +1,110 @@
+# DAX Measures Documentation and clear explanation
+
+This project uses DAX (Data Analysis Expressions) to create business metrics and perform advanced analytical calculations within Power BI. The measures were organized inside a dedicated Measures table to maintain a clean and scalable data model. The calculations support revenue analysis, profitability tracking, customer insights, time intelligence reporting, and variance analysis across multiple dashboard pages.
+
+The Total Revenue measure calculates the overall sales generated from all transactions using the SalesAmount column from the Sales_Fact table.
+
+DAX
+Total Revenue = SUM(Sales_Fact[SalesAmount])
+
+
+The Total Cost measure calculates the total operational or product cost associated with sales transactions.
+
+DAX
+Total Cost = SUM(Sales_Fact[CostAmount])
+
+Gross Profit is derived by subtracting total cost from total revenue to measure overall profitability.
+
+DAX
+Gross Profit = [Total Revenue] - [Total Cost]
+
+Gross Margin Percentage measures profitability efficiency by calculating the percentage of profit earned from total revenue.
+
+DAX
+Gross Margin % =
+DIVIDE([Gross Profit], [Total Revenue])
+
+
+The Total Orders measure calculates the total number of unique customer orders placed.
+
+DAX
+Total Orders =
+DISTINCTCOUNT(Sales_Fact[OrderID])
+
+Total Quantity calculates the total number of products sold across all transactions.
+
+DAX
+Total Quantity =
+SUM(Sales_Fact[Quantity])
+
+
+Average Order Value calculates the average revenue generated per order.
+
+DAX
+Average Order Value =
+DIVIDE([Total Revenue], [Total Orders])
+
+
+Previous Month Revenue uses time intelligence functions to retrieve revenue from the prior month for comparison analysis.
+
+DAX
+Previous Month Revenue =
+CALCULATE(
+    [Total Revenue],
+    PREVIOUSMONTH(Date_Dimension[Date])
+)
+
+
+Revenue Change Percentage calculates month-over-month revenue growth or decline.
+
+DAX
+Revenue Change % =
+DIVIDE(
+    [Total Revenue] - [Previous Month Revenue],
+    [Previous Month Revenue]
+)
+
+Revenue Difference calculates the numeric variance between current and previous month revenue.
+
+DAX
+Revenue Difference =
+[Total Revenue] - [Previous Month Revenue]
+
+Revenue YTD calculates cumulative revenue from the beginning of the year to the selected reporting period.
+
+DAX
+Revenue YTD =
+TOTALYTD(
+    [Total Revenue],
+    Date_Dimension[Date]
+)
+
+Gross Profit YTD calculates cumulative gross profit over the current year.
+
+DAX
+Gross Profit YTD =
+TOTALYTD(
+    [Gross Profit],
+    Date_Dimension[Date]
+)
+
+Revenue Contribution Percentage calculates the percentage contribution of each region, product, or category to total revenue.
+
+DAX
+Revenue Contribution % =
+DIVIDE(
+    [Total Revenue],
+    CALCULATE(
+        [Total Revenue],
+        ALL(Region_Dimension)
+    )
+)
+
+Low Margin Flag identifies products with low profitability and helps users quickly detect underperforming products during analysis.
+
+DAX
+Low Margin Flag =
+IF([Gross Margin %] < 0.15, "Low Margin", "Healthy")
+
+
+These DAX measures were used across KPI cards, trend charts, variance indicators, drill-through pages, and interactive business analysis dashboards to deliver meaningful insights and support data-driven decision-making.
